@@ -25,7 +25,7 @@ exports.handleRequest = function (req, res) {
       res.writeHead(302, url);
       archive.isUrlInList(url, (exists) => {
         if (!exists) {
-          archive.addUrlToList(url);
+          archive.addUrlToList(url, );
         } else {
           var asset = `${archive.paths.archivedSites}/${url}`;
           httpHelper.serveAssets(res, asset);
