@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var http = require('http');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -13,7 +14,8 @@ exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt'),
-  index: path.join(__dirname, '../web/public/index.html')
+  index: path.join(__dirname, '../web/public/index.html'),
+  loadingPage: path.join(__dirname, '../web/public/loading.html')
 };
 
 // Used for stubbing paths for tests, do not modify
@@ -43,12 +45,32 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  fs.writeFile(exports.paths.list, url, 'utf8', callback);
+  fs.appendFile(exports.paths.list, (url + '\n'), 'utf8', callback);
 };
 
 exports.isUrlArchived = function(url, callback) {
-
+  // console.log(exports.paths.archivedSites + '/' + url);
+  fs.readdir(exports.paths.archivedSites, (err, data) => {
+    if (err) {
+      throw err;
+    } else {
+      callback(data.includes(url));
+    }
+  });
 };
 
 exports.downloadUrls = function(urls) {
+  _.each(urls, (url) => {
+    http.get('http://' + url, (res) => {
+      
+
+      res.on('data', (chunk) => {
+        chunk = chunk.toString();
+        // console.log('chunk');
+        fs.appendFile(`${exports.paths.archivedSites}/${url}`, chunk);
+      });
+
+      //console.log(data);
+    });
+  });
 };

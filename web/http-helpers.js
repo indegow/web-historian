@@ -27,6 +27,18 @@ exports.serveAssets = function(res, asset, callback) {
 
 };
 
+exports.loadingPage = function (res) {
+  fs.readFile(archive.paths.loadingPage, 'utf8', (err, data) => {
+    if (err) {
+      res.writeHead(404);
+      res.end();
+      return;
+    }
+    res.writeHead(302, this.headers);
+    res.end(data);
+  });
+};
+
 
 
 // As you progress, keep thinking about what helper functions you can put here!

@@ -19,13 +19,18 @@ exports.handleRequest = function (req, res) {
 
 
   if (req.method === 'POST') {
+
     req.on('data', (data) => {
       var url = data.toString().slice(4);
       console.log(url);
       res.writeHead(302, url);
+
       archive.isUrlInList(url, (exists) => {
         if (!exists) {
-          archive.addUrlToList(url, );
+          archive.addUrlToList(url, () => {
+            httpHelper.loadingPage(res);
+          });
+          archive.downloadUrls([url]);
         } else {
           var asset = `${archive.paths.archivedSites}/${url}`;
           httpHelper.serveAssets(res, asset);
