@@ -66,7 +66,7 @@ exports.downloadUrls = function(urls) {
 
       res.on('data', (chunk) => {
         chunk = chunk.toString();
-        // console.log('chunk');
+        console.log('chunk');
         fs.appendFile(`${exports.paths.archivedSites}/${url}`, chunk);
       });
 
